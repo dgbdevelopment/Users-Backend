@@ -16,15 +16,7 @@ userController.home = async (req, res) => {
 userController.createUser = async (req, res) => {
   //Validar lo que nos llega
   const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).send(errors);
-  //Verificar que el usuario no exista
-  const { email } = req.body;
-  const checkforEmail = await User.findOne({ email });
-  if (checkforEmail)
-    return res
-      .status(400)
-      .send({ errors: [{ msg: "El email proporcionado ya está registrado" }] });
-  //Crear usuario con los datos que nos llegan
+  if (!errors.isEmpty()) return res.status(400).send({errors : errors.errors.map(error=> error.msg)});
   const newUser = new User(req.body);
   //Encriptar el password
   newUser.password = await newUser.encryptPassword(newUser.password);
@@ -33,13 +25,13 @@ userController.createUser = async (req, res) => {
     if (err)
       return res
         .status(400)
-        .send({ msg: "Error al crear usuario", reason: err.message });
+        .send({ errors: ["Error al crear usuario: " + err.message] });
     //Obtenemos token
     const token = getToken(user)
     //Mandamos datos de usuario
     return res
       .status(200)
-      .send({ msg: "El usuario ha sido registrado correctamente.", token});
+      .send({ success: "El usuario ha sido registrado correctamente.", token});
   });
 }
 

@@ -19,12 +19,15 @@ const UserSchema = new Schema(
       required: true,
       trim: true,
     },
-    roles: {
-      type: Array,
-      default: ['standard'],
-    }
+    roles: [{
+      ref: "Role",
+      type: Schema.Types.ObjectId
+    }]
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false
+  }
 );
 
 UserSchema.methods.encryptPassword = async (password) => {
