@@ -1,11 +1,11 @@
 {
-  "name": "users-backend",
+  "name": "gestion-empresas",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "dev": "nodemon"
+    "start": "node src/.",
+    "dev": "nodemon src/."
   },
   "keywords": [],
   "author": "",

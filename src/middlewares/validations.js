@@ -24,15 +24,12 @@ const userRegisterValidations = [
 
 const userLoginValidations = [
   check("email", "El email no es válido").isEmail(),
-  check(
-    "password",
-    "La contraseña debe contener 6 caracteres mínimo con al menos: 1 miníscula, 1 mayúscula y 1 número"
-  ).custom((value) => {
+  check("password", "La contraseña debe contener 6 caracteres mínimo con al menos: 1 miníscula, 1 mayúscula y 1 número")
+    .custom((value) => {
     if (!passwordRegEx.test(value)) return false;
     return true;
-  }),  
+  }),
 ];
-
 
 module.exports = { userRegisterValidations, userLoginValidations };
 

@@ -19,4 +19,4 @@ app.use('/api/user', require('./routes/user.routes'));
 
 
 //create server
-app.listen(app.get('PORT'), () => console.log('App listening on port', app.get('PORT')));
+app.listen(app.get('PORT'), () => console.log(`App running on http://localhost:${app.get('PORT')}/api`));
