@@ -5,7 +5,8 @@ const getToken = (user) => {
   const payload = {
     user: {
       id: user.id,
-      username: user.username
+      username: user.username,
+      roles: user.roles
     }
   }
   const result = jwt.sign(payload, process.env.SECRET, {
@@ -13,5 +14,17 @@ const getToken = (user) => {
     })
   return result;
 }
+const verifyToken = (token) => {
+  
+  try {
+    const userdata = jwt.verify(token, process.env.SECRET, {
+    ignoreExpiration: false,
+    });
+    return userdata;
 
-module.exports = {getToken}
+  } catch (err) {
+    return {err: err.message};
+  }
+}
+
+module.exports = {getToken, verifyToken}

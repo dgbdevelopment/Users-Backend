@@ -1,9 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-require('./database')
+require('./database');
+const createRoles = require('./libs/initialSetup');
 
-
+createRoles();
 //settings
 app.set('PORT', process.env.PORT || 3300)
 
