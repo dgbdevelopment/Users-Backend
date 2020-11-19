@@ -12,9 +12,8 @@ userController.userList = async (req, res) => {
   await User.find((err, users) => {
     if (err)
       return res
-        .status(400)
         .send(new Response(0, ["Error al consultar la lista de usuarios" ]));
-    return res.status(200).send(new Response(1, [`Lista de usuarios actuales.`], users ));
+    return res.send(new Response(1, [`Lista de usuarios actuales.`], users ));
   });
 };
 
@@ -23,7 +22,7 @@ userController.userList = async (req, res) => {
 userController.createUser = async (req, res) => {
   //Validar lo que nos llega
   const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).send(new Response(0, errors.errors.map((error) => error.msg)));
+  if (!errors.isEmpty()) return res.send(new Response(0, errors.errors.map((error) => error.msg)));
   const newUser = new User(req.body);
   //Encriptar el password
   newUser.password = await newUser.encryptPassword(newUser.password);
@@ -41,14 +40,13 @@ userController.createUser = async (req, res) => {
   }
   //Guardar usuario
   await newUser.save(async (err, user) => {
-    if (err) return res.status(400).send(new Response(0, ["Error al crear usuario: " + err.message]));
+    if (err) return res.send(new Response(0, ["Error al crear usuario: " + err.message]));
     //Obtenemos token
     user = await User.findById(user._id).populate('roles')
     const token = getToken(user);
     //Mandamos datos de usuario
     return res
-      .status(200)
-      .send(new Response(1, ["El usuario ha sido registrado correctamente."], token));
+      .send(new Response(1, ["El usuario ha sido registrado correctamente."], { username: newUser.username, token }));
   })
 };
 
@@ -57,15 +55,12 @@ userController.createUser = async (req, res) => {
 userController.loginUser = async (req, res) => {
   //Validamos lo que llega
   const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).send(new Response(0, errors.errors.map((error) => error.msg)));
+  if (!errors.isEmpty()) return res.send(new Response(0, errors.errors.map((error) => error.msg)));
   //Verificamos que el usuario exista
   const user = await User.findOne({ email: req.body.email }).populate('roles');
   if (!user)
     return res
-      .status(400)
-      .send({
-        msg: "El email introducido no existe en nuestra base de datos.",
-      });
+      .send(new Response(0, ["El email introducido no existe en nuestra base de datos."]));
   // //Comprobamos el password
   const matchPassword = await user.matchPassword(
     req.body.password,
@@ -73,12 +68,11 @@ userController.loginUser = async (req, res) => {
   );
   if (!matchPassword)
     return res
-      .status(400)
       .send(new Response(0, ["La contraseña introducida es incorrecta."]));
   //Obtenemos un nuevo token
   const token = getToken(user);
   //Mandamos los datos
-  res.status(200).send(new Response(1, ["Usuario logeado correctamente"], token ));
+  res.send(new Response(1, ["Usuario logeado correctamente"], { username: user.username, token } ));
 };
 
 module.exports = userController;

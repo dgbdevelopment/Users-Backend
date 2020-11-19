@@ -3,6 +3,7 @@ const Response = require("../responses/response");
 
 const isAuth = (req, res, next) => {
   //obtener el token del header
+  if (!req.headers.authorization) return res.send(new Response(0, ['No tienes autorización']));
   const token = req.headers.authorization.split(' ')[1];
   //Verificar que exista el token
   if(!token) return res.status(401).send(new Response(0, ['No hay token. No tienes autorización.']))

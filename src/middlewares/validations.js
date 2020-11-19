@@ -16,7 +16,7 @@ const userRegisterValidations = [
     if (!passwordRegEx.test(value)) return false;
     return true;
   }),
-  check("confirm", "Las contraseñas no coinciden").custom((value, { req }) => {
+  check("confirm_password", "Las contraseñas no coinciden").custom((value, { req }) => {
     if (value !== req.body.password) return false;
     return true;
   }),

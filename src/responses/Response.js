@@ -1,6 +1,6 @@
 class Response {
-  constructor(succes = 0, messages = null, data = null) {
-    this.succes = succes;
+  constructor(success = 0, messages = null, data = null) {
+    this.success = success;
     this.messages = messages;
     this.data = data;
   }
